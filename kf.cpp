@@ -19,25 +19,39 @@ MatrixXf F, MatrixXf H, MatrixXf R, MatrixXf I)
         // Code the Measurement Update
         // Initialize and Compute Z, y, S, K, x, and P
         MatrixXf Z(1, 1);
+        // Z:real measurement value
         Z << measurements[n];
         
         MatrixXf y(1, 1);
-        y << Z - H * x;
+        // H: measurement state Matrix
+        // y: the diff of real and measurement
+        y << Z - H * x; 
         
         MatrixXf S(1, 1);
+        // R: measurement notise
+        // S: help to calc Lalman gain
         S << H * P * H.transpose() + R;
         
-        MatrixXf K(2, 1);
-        K << P * H.transpose() * S.inverse();
+        MatrixXf K(2, 2);
+        // K: Kalman gain
+        K = P * H.transpose() * S.inverse();
         
+        // x: between the previous value and addition
         x = x + K * y;
         P = (I - K * H) * P;
         
         // Prediction
         // Code the Prediction
         // Compute x and P
-        x << F * x + u;
-        P << F * P * F.transpose(); // + Q;
+        
+        // F: state transition matrix
+        // u: noise of statue transition
+        x = F * x + u;
+        
+        // P: covariance matrix
+        // Q: an increase of uncertainty
+        P = F * P * F.transpose(); // + Q
+        
     }
 
     return make_tuple(x, P);
