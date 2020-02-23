@@ -28,7 +28,7 @@ MatrixXf F, MatrixXf H, MatrixXf R, MatrixXf I)
         y << Z - H * x; 
         
         MatrixXf S(1, 1);
-        // R: measurement notise
+        // R: measurement noise
         // S: help to calc Lalman gain
         S << H * P * H.transpose() + R;
         
